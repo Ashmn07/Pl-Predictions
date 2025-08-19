@@ -1,178 +1,174 @@
-# Premier League Predictions App
+# ⚽ Premier League Predictions App
 
-A modern web application for predicting Premier League match scores and competing with friends.
+A modern, real-time web application for predicting Premier League match scores with live updates, intelligent gameweek management, and comprehensive analytics.
 
-## 🚀 Phase 1 Complete: Basic Layout & Navigation
+## ✨ Features
 
-✅ **What's been built:**
-- Next.js 14 with App Router, TypeScript, and Tailwind CSS
-- Responsive header with logo and user info placeholder  
-- Collapsible sidebar navigation with 5 main sections
-- Mobile-first responsive design with hamburger menu
-- Clean, modern UI with proper styling
-- Routing structure for all main pages
+### 🎯 **Smart Predictions**
+- Intelligent gameweek defaults (upcoming for predictions, recent for results)
+- Real-time score updates via Server-Sent Events (SSE)
+- Advanced scoring system with bonus points
+- Batch submission workflow with draft/submit states
 
-## 🎯 Features Currently Available
+### 📊 **Live Scores & Analytics**
+- Real-time match tracking with live indicators
+- Automatic fixture and score synchronization
+- Performance analytics and accuracy tracking
+- Comprehensive leaderboard with achievements
 
-- **Dashboard**: Real-time stats cards with prediction data and quick actions
-- **Fixtures**: Interactive prediction system with localStorage persistence
-- **My Predictions**: Complete prediction history with submitted/draft status tracking 
-- **Leaderboard**: Rankings page (placeholder)
-- **Profile**: User profile and stats (placeholder)
+### 🔐 **Authentication & User Management**
+- Secure user registration and login
+- Profile management with detailed stats
+- Session-based authentication with NextAuth.js
 
-## 🛠️ Tech Stack
+### ⚡ **Real-time Updates**
+- Server-Sent Events for live match updates
+- Smart cron scheduling (only during match windows)
+- Background polling service with automatic match detection
 
-- **Frontend**: Next.js 14, React 18, TypeScript
-- **Styling**: Tailwind CSS with green/purple dual theme
-- **State Management**: React Context with localStorage persistence
-- **Data**: Mock Premier League teams and fixtures with full CRUD operations
-- **Components**: Reusable match cards, prediction tracking, notification system
-- **Scoring**: Advanced points calculation with bonus systems
-- **Icons**: Custom SVG icons + team emoji logos
-- **Routing**: Next.js App Router
+## 🚀 Quick Start
 
-## 📦 Installation & Setup
+### Prerequisites
+- Node.js 18+ 
+- PostgreSQL database (we recommend [Supabase](https://supabase.com))
+- RapidAPI account for [API-Football](https://rapidapi.com/api-sports/api/api-football)
 
-1. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+### Installation
 
-2. **Start development server:**
-   ```bash
-   npm run dev
-   ```
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/prediction-app.git
+cd prediction-app
 
-3. **Open your browser:**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+# Install dependencies
+npm install
 
-## 🏗️ Project Structure
+# Set up environment variables
+cp .env.example .env.local
+# Edit .env.local with your configuration
 
-```
-src/
-├── app/                  # Next.js App Router pages
-│   ├── fixtures/        # Fixtures page
-│   ├── predictions/     # Predictions page  
-│   ├── leaderboard/     # Leaderboard page
-│   ├── profile/         # Profile page
-│   ├── layout.tsx       # Root layout
-│   ├── page.tsx         # Dashboard page
-│   └── globals.css      # Global styles
-├── components/
-│   ├── layout/          # Layout components
-│   │   ├── AppLayout.tsx    # Main layout wrapper
-│   │   ├── Header.tsx       # Top navigation bar
-│   │   └── Sidebar.tsx      # Side navigation
-│   └── ui/              # UI components
-│       └── icons.tsx        # SVG icon components
-├── types/
-│   └── index.ts         # TypeScript type definitions
-└── lib/                 # Utilities (for future use)
+# Set up database
+npx prisma db push
+
+# Start development server
+npm run dev
 ```
 
-## 🎨 Design Features
+Visit [http://localhost:3000](http://localhost:3000) to see the app.
 
-- **Responsive Design**: Mobile-first approach with breakpoints
-- **Modern UI**: Clean cards, subtle shadows, green and purple dual theme
-- **Interactive Elements**: Gradient logo, hover effects, color transitions
-- **Accessibility**: ARIA labels, keyboard navigation, focus states
-- **Football-Inspired**: Green and purple colors representing the pitch and Premier League
+## 🔧 Configuration
 
-## 📱 Responsive Behavior
+Create a `.env.local` file with the following variables:
 
-- **Desktop**: Persistent sidebar navigation
-- **Mobile**: Collapsible hamburger menu with overlay
-- **Tablet**: Adaptive layout that works on all screen sizes
+```bash
+# Database
+DATABASE_URL="postgresql://user:password@host:5432/database"
 
-## 🧪 Testing Instructions
+# NextAuth.js
+NEXTAUTH_SECRET="your-secret-key"
+NEXTAUTH_URL="http://localhost:3000"
 
-1. **Test Navigation:**
-   - Click between Dashboard, Fixtures, Predictions, Leaderboard, Profile
-   - Verify active state highlighting works correctly
+# API-Football (RapidAPI)
+RAPIDAPI_KEY="your-rapidapi-key"
 
-2. **Test Responsiveness:**
-   - Resize browser window to test different breakpoints
-   - On mobile: tap hamburger menu to open/close sidebar
-   - Verify overlay clicking closes mobile menu
+# Cron Security
+CRON_SECRET="random-secret-string"
 
-3. **Test UI Elements:**
-   - All placeholder content displays correctly
-   - Stats cards show proper layout
-   - Icons render correctly throughout
+# Environment
+NODE_ENV="development"
+```
 
-## ✅ What Works Right Now
+## 📱 Screenshots
 
-- ✅ Full navigation between all pages
-- ✅ Responsive mobile menu
-- ✅ Clean, professional design
-- ✅ TypeScript type safety
-- ✅ Tailwind CSS styling
-- ✅ Proper project structure for scaling
+[Add screenshots here]
 
-## ✅ Phase 3 Complete: Prediction State Management
+## 🏗️ Tech Stack
 
-**What's Built:**
-- **LocalStorage Persistence**: All predictions automatically saved and loaded
-- **React Context Integration**: Global state management across the entire app
-- **Advanced Scoring System**: 5-point exact score, 3-point goal difference, 1-point correct winner
-- **Bonus Points System**: Upset bonus (+2), clean sheet bonus (+1), nil-nil bonus (+2)
-- **Submission Workflow**: Draft vs submitted states with batch submission
-- **Real-time Notifications**: Success/error feedback with auto-dismiss
-- **My Predictions Page**: Complete prediction history with status tracking
-- **Smart Dashboard**: Dynamic stats integration with real prediction data
+- **Framework**: Next.js 15 with App Router
+- **Database**: PostgreSQL with Prisma ORM
+- **Authentication**: NextAuth.js
+- **Styling**: Tailwind CSS
+- **Real-time**: Server-Sent Events (SSE)
+- **Deployment**: Vercel with cron jobs
+- **External API**: API-Football via RapidAPI
 
-## ✅ Phase 4 Complete: Leaderboard & Competition System
+## 🎮 Usage
 
-**What's Built:**
-- **Complete Leaderboard**: Full user ranking system with 10 mock users and realistic stats
-- **Advanced Filtering & Sorting**: Sort by total points, weekly points, or accuracy rate
-- **Achievement System**: 6 achievement types across 4 categories with rarity levels
-- **Enhanced Profile**: Tabbed interface with overview, achievements, and detailed stats
-- **Competition Features**: Rank movement tracking, weekly performance charts, top performer podium
-- **Visual Enhancements**: Medal system, achievement badges, progress indicators, and responsive design
+### For Users
+1. **Sign Up/Login**: Create an account or sign in
+2. **Make Predictions**: Navigate to predictions page and predict upcoming matches
+3. **Track Results**: View your prediction accuracy and points on the results page
+4. **Check Leaderboard**: See how you rank against other users
+5. **Live Updates**: Watch live scores update automatically during matches
 
-## ✅ Phase 5 Complete: Advanced Analytics & Insights
+### For Admins
+1. **Access Admin Panel**: Visit `/admin` (requires admin privileges)
+2. **Sync Teams**: Import Premier League teams from API-Football
+3. **Sync Fixtures**: Import match fixtures for the current season
+4. **Monitor Live Scores**: Background service automatically updates scores during matches
 
-**What's Built:**
-- **Comprehensive Analytics Dashboard**: 6-tab interface with Overview, Accuracy, Performance, Match Difficulty, Head-to-Head, and AI Insights
-- **Prediction Accuracy Tracking**: Interactive weekly accuracy charts with trend indicators and performance breakdowns
-- **Multi-View Performance Charts**: Combined points/rank visualization, individual chart modes, and seasonal trend analysis
-- **Match Difficulty Analysis**: 4-factor difficulty scoring system with visual breakdowns and performance by difficulty level
-- **Head-to-Head Comparisons**: Direct user vs user analysis with win rates, points comparison, and last encounter details
-- **AI-Powered Insights**: Intelligent performance analysis with priority-based recommendations and actionable suggestions
+## 🚀 Deployment
 
-## 🔜 Next Steps (Phase 6)
+### Vercel (Recommended)
 
-Ready to build **Authentication & User Management** with:
-- NextAuth.js implementation with multiple providers
-- User registration and profile management
-- Friends system and private leagues
-- Email notifications and social features
+1. **Push to GitHub**:
+   ```bash
+   git remote add origin https://github.com/yourusername/prediction-app.git
+   git push -u origin main
+   ```
 
-## 🔧 Configuration Notes
+2. **Deploy to Vercel**:
+   - Connect your GitHub repository to Vercel
+   - Configure environment variables in Vercel dashboard
+   - Deploy with automatic cron jobs
 
-- **Tailwind CSS**: v3.4.17 properly configured and fully functional
-- **TypeScript**: Configured with strict mode and Next.js optimizations
-- **Routing**: Using Next.js App Router (typedRoutes disabled for compatibility)
-- **Theme**: Modern green and purple dual theme with gradients and hover effects
+3. **Set up Database**:
+   ```bash
+   npx prisma db push
+   ```
 
-## 🚀 Commands
+4. **Initialize Data**:
+   - Visit `/admin` on your deployed app
+   - Sync teams and fixtures
 
-- `npm run dev` - Start development server (runs on http://localhost:3000)
-- `npm run build` - Build for production  
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
+See [docs/README-DEPLOYMENT.md](docs/README-DEPLOYMENT.md) for detailed deployment instructions.
 
-## ✅ Build Status
+## 📖 Documentation
 
-All builds passing ✅
-- Development server: ✅ Working perfectly
-- Production build: ✅ Working perfectly  
-- TypeScript compilation: ✅ No errors
-- ESLint: ✅ No errors
-- **Tailwind CSS**: ✅ Fully functional and responsive
+- [Database Setup](docs/DATABASE_SETUP.md) - PostgreSQL and Prisma configuration
+- [RapidAPI Setup](docs/RAPIDAPI_SETUP.md) - API-Football integration guide
+- [Deployment Guide](docs/README-DEPLOYMENT.md) - Production deployment instructions
+- [Phase Documentation](docs/) - Development phase details
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **API-Football** for providing Premier League data
+- **Vercel** for hosting and serverless functions
+- **Prisma** for database ORM
+- **NextAuth.js** for authentication
+- **Tailwind CSS** for styling
+
+## 📞 Support
+
+If you encounter any issues or have questions:
+- Open an issue on GitHub
+- Check the [documentation](docs/)
+- Review the [troubleshooting guide](docs/README-DEPLOYMENT.md#troubleshooting)
 
 ---
 
-**Status**: Phase 5 Complete ✅  
-**Next**: Phase 6 - Authentication & User Management
+**⭐ If you found this project helpful, please consider giving it a star!**
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Fprediction-app)
