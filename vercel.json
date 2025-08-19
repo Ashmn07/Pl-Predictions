@@ -1,0 +1,20 @@
+{
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/live-scores/match-window-check",
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/live-scores/cron",
+      "schedule": "*/10 * * * *"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}

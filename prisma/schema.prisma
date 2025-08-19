@@ -1,0 +1,314 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                     String             @id @default(cuid())
+  email                  String             @unique
+  username               String             @unique
+  displayName            String
+  avatar                 String?
+  favoriteTeam           String?
+  isEmailVerified        Boolean            @default(false)
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+  password               String?
+  totalPoints            Int                @default(0)
+  currentRank            Int?
+  previousRank           Int?
+  accuracyRate           Float              @default(0.0)
+  totalPredictions       Int                @default(0)
+  correctPredictions     Int                @default(0)
+  currentStreak          Int                @default(0)
+  bestStreak             Int                @default(0)
+  accounts               Account[]
+  receivedFriendRequests FriendRequest[]    @relation("FriendRequestReceiver")
+  sentFriendRequests     FriendRequest[]    @relation("FriendRequestSender")
+  friendsAsUser1         Friend[]           @relation("FriendUser1")
+  friendsAsUser2         Friend[]           @relation("FriendUser2")
+  receivedLeagueInvites  LeagueInvitation[] @relation("LeagueInvitationReceiver")
+  sentLeagueInvites      LeagueInvitation[] @relation("LeagueInvitationSender")
+  leagueMembers          LeagueMember[]
+  ownedLeagues           League[]           @relation("LeagueOwner")
+  predictions            Prediction[]
+  sessions               Session[]
+  activities             SocialActivity[]
+  achievements           UserAchievement[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationtokens")
+}
+
+model Team {
+  id           String    @id @default(cuid())
+  apiId        Int       @unique
+  name         String    @unique
+  shortName    String    @unique
+  logoUrl      String
+  color        String?
+  founded      Int?
+  venue        String?
+  city         String?
+  capacity     Int?
+  createdAt    DateTime  @default(now())
+  awayFixtures Fixture[] @relation("AwayTeam")
+  homeFixtures Fixture[] @relation("HomeTeam")
+
+  @@map("teams")
+}
+
+model Fixture {
+  id          String        @id @default(cuid())
+  apiId       Int           @unique
+  gameweek    Int
+  season      String
+  homeTeamId  String
+  awayTeamId  String
+  kickoffTime DateTime
+  status      FixtureStatus @default(SCHEDULED)
+  venue       String?
+  referee     String?
+  homeScore   Int?
+  awayScore   Int?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  awayTeam    Team          @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  homeTeam    Team          @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  predictions Prediction[]
+
+  @@map("fixtures")
+}
+
+model Prediction {
+  id          String   @id @default(cuid())
+  userId      String
+  fixtureId   String
+  homeScore   Int
+  awayScore   Int
+  confidence  Int      @default(50)
+  isSubmitted Boolean  @default(false)
+  points      Int?
+  isCorrect   Boolean?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  fixture     Fixture  @relation(fields: [fixtureId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, fixtureId])
+  @@map("predictions")
+}
+
+model Achievement {
+  id               String            @id @default(cuid())
+  name             String            @unique
+  description      String
+  icon             String
+  rarity           AchievementRarity
+  points           Int               @default(0)
+  category         String
+  conditions       Json
+  createdAt        DateTime          @default(now())
+  userAchievements UserAchievement[]
+
+  @@map("achievements")
+}
+
+model UserAchievement {
+  id            String      @id @default(cuid())
+  userId        String
+  achievementId String
+  unlockedAt    DateTime    @default(now())
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+  @@map("user_achievements")
+}
+
+model FriendRequest {
+  id         String              @id @default(cuid())
+  senderId   String
+  receiverId String
+  message    String?
+  status     FriendRequestStatus @default(PENDING)
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+  receiver   User                @relation("FriendRequestReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  sender     User                @relation("FriendRequestSender", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@unique([senderId, receiverId])
+  @@map("friend_requests")
+}
+
+model Friend {
+  id        String   @id @default(cuid())
+  user1Id   String
+  user2Id   String
+  createdAt DateTime @default(now())
+  user1     User     @relation("FriendUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2     User     @relation("FriendUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+
+  @@unique([user1Id, user2Id])
+  @@map("friends")
+}
+
+model League {
+  id          String             @id @default(cuid())
+  name        String
+  description String
+  type        LeagueType
+  ownerId     String
+  maxMembers  Int?
+  joinCode    String?            @unique
+  prize       String?
+  rules       Json?
+  isActive    Boolean            @default(true)
+  season      String             @default("2024/25")
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  invitations LeagueInvitation[]
+  members     LeagueMember[]
+  owner       User               @relation("LeagueOwner", fields: [ownerId], references: [id])
+
+  @@map("leagues")
+}
+
+model LeagueMember {
+  id       String     @id @default(cuid())
+  leagueId String
+  userId   String
+  role     LeagueRole @default(MEMBER)
+  joinedAt DateTime   @default(now())
+  league   League     @relation(fields: [leagueId], references: [id], onDelete: Cascade)
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([leagueId, userId])
+  @@map("league_members")
+}
+
+model LeagueInvitation {
+  id         String                 @id @default(cuid())
+  leagueId   String
+  senderId   String
+  receiverId String
+  message    String?
+  status     LeagueInvitationStatus @default(PENDING)
+  expiresAt  DateTime
+  createdAt  DateTime               @default(now())
+  league     League                 @relation(fields: [leagueId], references: [id], onDelete: Cascade)
+  receiver   User                   @relation("LeagueInvitationReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  sender     User                   @relation("LeagueInvitationSender", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@unique([leagueId, receiverId])
+  @@map("league_invitations")
+}
+
+model SocialActivity {
+  id          String             @id @default(cuid())
+  userId      String
+  type        SocialActivityType
+  description String
+  details     Json?
+  createdAt   DateTime           @default(now())
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("social_activities")
+}
+
+model ApiSync {
+  id       String   @id @default(cuid())
+  type     String   @unique
+  lastSync DateTime @default(now())
+  apiCalls Int      @default(0)
+
+  @@map("api_sync")
+}
+
+enum FixtureStatus {
+  SCHEDULED
+  LIVE
+  FINISHED
+  POSTPONED
+  CANCELLED
+}
+
+enum AchievementRarity {
+  COMMON
+  RARE
+  EPIC
+  LEGENDARY
+}
+
+enum FriendRequestStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+enum LeagueType {
+  PRIVATE
+  PUBLIC
+}
+
+enum LeagueRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum LeagueInvitationStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  EXPIRED
+}
+
+enum SocialActivityType {
+  FRIEND_ADDED
+  PREDICTION_MADE
+  ACHIEVEMENT_UNLOCKED
+  RANK_IMPROVED
+  LEAGUE_JOINED
+}
